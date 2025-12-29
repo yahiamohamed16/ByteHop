@@ -1,0 +1,35 @@
+{% extends "layout.html" %}
+{% block title %}شرح شباتر منصه qureo{% endblock %}
+{% block content %}
+<h2>منهج البرمجة والذكاء الاصطناعي | الصف الأول الثانوي</h2>
+<div class="module">
+    <h3>شرح الفصول 1 إلى 3</h3>
+    <ul>
+        <li><a href="{{ url_for('lesson', lesson_id=32) }}">شرح أول 3 فصول من مادة البرمجة للصف الأول الثانوي – الترم الأول | شرح مبسط باستخدام الذكاء الاصطناعي</a></li>
+    </ul>
+</div>
+<div class="module">
+    <h3>شرح الفصول 5 و6 و7</h3>
+    <ul>
+        <li><a href="{{ url_for('lesson', lesson_id=33) }}">شرح الفصول 5 و6 و7 في البرمجة | جمل if و else if و else للصف الأول الثانوي</a></li>
+    </ul>
+</div>
+<div class="module">
+    <h3>شرح الفصول 9 و10</h3>
+    <ul>
+        <li><a href="{{ url_for('lesson', lesson_id=34) }}">شرح الوحدة 9 و10 من مادة البرمجة للصف الأول الثانوي | الجزء الخاص بالمنصة التعليمية</a></li>
+    </ul>
+</div>
+<div class="module">
+    <h3>شرح الفصول 12 و13</h3>
+    <ul>
+        <li><a href="{{ url_for('lesson', lesson_id=35) }}">شرح الشبتر 12 و 13 من منصة Qureo | الصف الأول الثانوي | قوة الدوال في البرمجة</a></li>
+    </ul>
+</div>
+<div class="module">
+    <h3>شرح الفصول 15 و16</h3>
+    <ul>
+        <li><a href="{{ url_for('lesson', lesson_id=36) }}">شرح الشابتر 15 و16 من منصة qureo | فك شفرة البرمجة أول أدوات.</a></li>
+    </ul>
+</div>
+{% endblock %}

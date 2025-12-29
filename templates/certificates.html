@@ -1,0 +1,21 @@
+{% extends "layout.html" %}
+
+{% block title %}الشهادات{% endblock %}
+
+{% block content %}
+<h2>الشهادات المتاحة</h2>
+<div class="cards-container">
+    {% for subject in subjects %}
+    <div class="card">
+        <h3>{{ subject.name }}</h3>
+        <p>تقدمك: {{ progress[subject.id].percentage }}%</p>
+        {% if progress[subject.id].completed == progress[subject.id].total %}
+        <!-- بدل الفورم، زر يروح لصفحة اختيار الاسم -->
+        <a href="{{ url_for('choose_certificate_name', subject_id=subject.id) }}" class="btn">الحصول على الشهادة</a>
+        {% else %}
+        <button disabled>عليك إتمام جميع الدروس للحصول على الشهادة</button>
+        {% endif %}
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

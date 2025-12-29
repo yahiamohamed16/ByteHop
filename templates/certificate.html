@@ -1,0 +1,16 @@
+{% extends "layout.html" %}
+
+{% block title %}إصدار الشهادة{% endblock %}
+
+{% block content %}
+<section class="certificate-generation">
+    <div class="certificate-box">
+        <h1 class="certificate-welcome">تهانينا! أنت على وشك الحصول على شهادتك 🎉</h1>
+        <h2>أدخل الاسم الذي سيظهر على الشهادة لمادة {{ subject.name }}</h2>
+        <form method="POST">
+            <input type="text" name="name" placeholder="اسمك هنا" required class="certificate-input">
+            <button type="submit" class="generate-btn">توليد الشهادة</button>
+        </form>
+    </div>
+</section>
+{% endblock %}

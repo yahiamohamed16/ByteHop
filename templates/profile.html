@@ -1,0 +1,26 @@
+{% extends "layout.html" %}
+{% block title %}حسابي الشخصي{% endblock %}
+
+{% block content %}
+<section class="profile">
+
+    <div class="profile-header">
+        <h2>مرحبًا، {{ user.username }}!</h2>
+        <h3>الدروس المكتملة</h3>
+    </div>
+
+    {% if lessons %}
+    <div class="lessons-cards">
+        {% for lesson in lessons %}
+        <div class="lesson-card">
+            <h4>{{ lesson.title }}</h4>
+            <p class="status">الحالة: مكتمل</p>
+            <button class="review-btn" onclick="location.href='/lesson/{{ lesson.id }}'">مراجعة الدرس</button>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+        <p class="no-lessons">لم تقم بإكمال أي درس بعد.</p>
+    {% endif %}
+</section>
+{% endblock %}

@@ -1,0 +1,37 @@
+{% extends "layout.html" %}
+
+{% block title %}إصدار الشهادة{% endblock %}
+
+{% block content %}
+<div class="certificate">
+    <div class="certificate-inner">
+        <!-- عنوان الشهادة -->
+        <h1 class="certificate-title">شهادة تقدير</h1>
+
+        <!-- اسم المنصة -->
+        <h1 class="platform">ByteHop</h1>
+
+        <!-- النص الرئيسي -->
+        <p class="cert-text">تهدي هذه الشهادة إلى</p>
+
+        <!-- اسم الطالب -->
+        <h2 class="name">{{ user_name }}</h2>
+
+        <!-- الدورة -->
+        <p class="cert-text">تقديراً لإكماله بنجاح دورة:</p>
+        <h3 class="course">{{ subject.name }}</h3>
+
+        <!-- تاريخ ورقم الشهادة -->
+        <p class="date">تاريخ الإصدار: {{ issue_date }}</p>
+        <p class="cert-id">رقم الشهادة: {{ certificate_id }}</p>
+    </div>
+
+    <!-- QR code أسفل الشهادة على الشمال -->
+     <p class="signature-name">Yahia</p>
+    <p class="signature-label">توقيع: </p>
+    <img src="data:image/png;base64,{{ qr_code_base64 }}" class="qr-code">
+</div>
+<p>لمزيد من الأمان، يمكنك أخذ لقطة للشاشة للشهادة.</p>
+
+
+{% endblock %}

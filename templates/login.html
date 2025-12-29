@@ -1,0 +1,25 @@
+{% extends "layout.html" %}
+{% block title %}تسجيل دخول{% endblock %}
+{% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
+
+<div class="center-container">
+    <div class="login-box">
+        <h2>تسجيل دخول</h2>
+
+        <form method="POST">
+            <label>اسم المستخدم:</label>
+            <input type="text" name="username" required>
+
+            <label>كلمة المرور:</label>
+            <input type="password" name="password" required>
+
+            <button type="submit">تسجيل دخول</button>
+            <p class="auth-link">
+              ليس لديك حساب؟ <a href="{{ url_for('register') }}">سجّل الآن</a>
+            </p>
+
+        </form>
+    </div>
+</div>
+{% endblock %}
