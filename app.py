@@ -268,18 +268,20 @@ def generate_certificate(subject_id):
     )
 
 
-if __name__ == "__main__":
-    with app.app_context():
-        db.create_all()
 
-        # إضافة المواد الأساسية لو مش موجودة
-        if not Subject.query.filter_by(name="البرمجة").first():
-            db.session.add(Subject(name="البرمجة"))
 
-        if not Subject.query.filter_by(name="منصة Qureo").first():
-            db.session.add(Subject(name="منصة Qureo"))
 
-        db.session.commit()
-        print("Database & subjects ready!")
+with app.app_context():
+    db.create_all()
 
-    app.run(debug=True)
+    if not Subject.query.filter_by(name="البرمجة").first():
+        db.session.add(Subject(name="البرمجة"))
+
+    if not Subject.query.filter_by(name="منصة Qureo").first():
+        db.session.add(Subject(name="منصة Qureo"))
+
+    db.session.commit()
+    print("Database & subjects ready!")
+
+
+    
