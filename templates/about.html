@@ -1,0 +1,57 @@
+{% extends "layout.html" %}
+
+{% block title %}عن صاحب المنصة{% endblock %}
+
+{% block content %}
+<section class="about-page">
+
+    <div class="about-card">
+
+        <div class="about-header">
+            <img src="{{ url_for('static', filename='images/about_owner.png') }}" alt="صاحب المنصة">
+            <h2>yahia mohamed</h2>
+        </div>
+
+        <div class="about-text">
+            <p>
+                 أنا طالب، ومؤسس منصة <strong>ByteHop</strong>، التي تهدف إلى تقديم محتوى تعليمي مبسط وواضح للطلاب.
+            </p>
+            <p>
+                 صممت المنصة لتتيح للطلاب التعلم خطوة خطوة، ومتابعة تقدمهم، ورؤية نتائج مجهودهم بشكل ملموس.
+            </p>
+            <p>
+                 الهدف من <strong>ByteHop</strong> هو تمكين الطالب من التعلم بطريقة منظمة، بدون تعقيد، مع التركيز على الفهم الحقيقي للمادة.
+            </p>
+            <p>
+                 أؤمن أن كل طالب قادر على تحقيق إنجازات ملموسة إذا حصل على الدعم والأدوات المناسبة، ومن هنا جاءت فكرة إنشاء هذه المنصة.
+            </p>
+        </div>
+
+
+
+        <hr>
+
+        <div class="about-support">
+            <h3>الدعم أو الاقتراحات</h3>
+
+            <form method="POST" action="{{ url_for('send_feedback') }}">
+                <input type="text" name="name" placeholder="اسمك" required>
+                <input type="email" name="email" placeholder="وسيلة التواصل" required>
+                <textarea name="message" placeholder="رسالتك" required></textarea>
+                <button type="submit">إرسال</button>
+            </form>
+        </div>
+
+        <div class="about-social">
+            <a href="https://www.linkedin.com/in/yahia-mohamed-139a6b382/" target="_blank" title="LinkedIn">
+                <img src="{{ url_for('static', filename='images/LinkedIn.jfif') }}" alt="LinkedIn">
+            </a>
+        </div>
+
+
+
+
+    </div>
+
+</section>
+{% endblock %}

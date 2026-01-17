@@ -9,7 +9,7 @@
     <div class="card">
         <h3>{{ subject.name }}</h3>
         <p>تقدمك: {{ progress[subject.id].percentage }}%</p>
-        {% if progress[subject.id].completed == progress[subject.id].total %}
+        {% if progress[subject.id]['completed'] == progress[subject.id]['total'] %}
         <!-- بدل الفورم، زر يروح لصفحة اختيار الاسم -->
         <a href="{{ url_for('choose_certificate_name', subject_id=subject.id) }}" class="btn">الحصول على الشهادة</a>
         {% else %}

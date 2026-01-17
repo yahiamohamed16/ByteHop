@@ -4,17 +4,25 @@
     <meta charset="UTF-8">
     <title>{% block title %}المنصة التعليمية{% endblock %}</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/bytehop_favicon.png') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@800;900&display=swap" rel="stylesheet">
 </head>
 <body>
 
 <header>
     <div class="header-content">
         <div class="header-left">
-            <a href="/"><img src="{{ url_for('static', filename='images/logo.png') }}" alt="لوجو المنصة" class="logo"></a>
-            <a href="/" class="ByteHop"><h1>ByteHop</h1></a>
+            <a href="/">
+                <img src="{{ url_for('static', filename='images/bytehop_favicon.png') }}"
+                    alt="ByteHop Logo"
+                    class="logo">
+            </a>
+
+            <a href="/" class="ByteHop"><h1>BYTEHOP</h1></a>
         </div>
 
         <nav class="header-links">
+            <a href="/about">المؤسس</a>
             {% if session.get('user_id') %}
                 <a href="/profile">الحساب الشخصي</a>
                 <a href="/certificates">الشهادات / الإنجازات</a>
@@ -47,7 +55,7 @@
 
 <footer>
     <div class="footer-content">
-        <p>© 2025 ByteHop</p>
+        <p>© 2026 ByteHop</p>
         <a href="https://www.youtube.com/@ByteHop-n4n" target="_blank" class="youtube-link">
             <img src="{{ url_for('static', filename='images/YOUTUBE.jfif') }}" alt="قناة اليوتيوب" class="youtube-logo">
         </a>

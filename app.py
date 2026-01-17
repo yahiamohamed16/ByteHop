@@ -3,6 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 from PIL import Image, ImageDraw, ImageFont
 from datetime import date
+from datetime import datetime
 from io import BytesIO
 import random
 import string
@@ -20,6 +21,16 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = 'cs50-secret-key'
 
 db = SQLAlchemy(app)
+class Certificate(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))  
+    subject_id = db.Column(db.Integer, db.ForeignKey('subject.id'))  
+    student_name = db.Column(db.String(100))
+    date_issued = db.Column(db.DateTime, default=datetime.utcnow)
+    certificate_id = db.Column(db.String(20), unique=True)
+    qr_code_base64 = db.Column(db.Text)
+
+    __table_args__ = (db.UniqueConstraint('user_id', 'subject_id', name='unique_cert'),)
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -40,6 +51,39 @@ class Progress(db.Model):
     lesson_id = db.Column(db.Integer, db.ForeignKey('lesson.id'))
     completed = db.Column(db.Boolean, default=False)
     lesson = db.relationship('Lesson')
+@app.route("/about")
+def about():
+    return render_template("about.html")
+@app.route("/send_feedback", methods=["POST"])
+def send_feedback():
+    name = request.form['name']
+    email = request.form['email']
+    message = request.form['message']
+
+    # هنا ممكن تحفظها في قاعدة البيانات أو تبعتها على الإيميل
+    print(f"Feedback from {name} ({email}): {message}")
+    flash("تم إرسال رسالتك بنجاح!", "success")
+    return redirect(url_for('about'))
+
+def get_youtube_embed(url):
+    """
+    تحول أي رابط يوتيوب إلى رابط embed صالح للـ iframe
+    يدعم:
+    - روابط طويلة: https://www.youtube.com/watch?v=ID
+    - روابط قصيرة: https://youtu.be/ID
+    - روابط فيها إضافات مثل &t=10s
+    """
+    if not url:
+        return None
+
+    if "youtu.be/" in url:
+        video_id = url.split("/")[-1]
+    elif "v=" in url:
+        video_id = url.split("v=")[-1].split("&")[0]
+    else:
+        return None
+
+    return f"https://www.youtube.com/embed/{video_id}"
 
 
 @app.route("/register", methods=["GET", "POST"])
@@ -108,11 +152,12 @@ def profile():
     lessons_info = []
     for progress in completed_lessons:
         lesson = Lesson.query.get(progress.lesson_id)
-        lessons_info.append({
-            "id": lesson.id,
-            "title": lesson.title,
-            "completed": progress.completed
-        })
+        if lesson:
+            lessons_info.append({
+                "id": lesson.id,
+                "title": lesson.title,
+                "completed": progress.completed
+            })
 
     return render_template("profile.html", user=user, lessons=lessons_info)
 
@@ -150,9 +195,10 @@ def lesson(lesson_id):
     lesson_dict = {
         "id": lesson_data.id,
         "title": lesson_data.title,
-        "video_url": lesson_data.video_url
+        "video_url": get_youtube_embed(lesson_data.video_url)  # تم التحويل
     }
     return render_template("lesson.html", lesson=lesson_dict)
+
 
 @app.route("/lesson/complete/<int:lesson_id>", methods=["POST"])
 @login_required
@@ -236,54 +282,78 @@ def verify_certificate(certificate_id):
 @login_required
 def choose_certificate_name(subject_id):
     subject = Subject.query.get_or_404(subject_id)
-    
+    user_id = session['user_id']
+
+    # تحقق إذا الطالب عنده شهادة مسبقًا
+    existing = Certificate.query.filter_by(user_id=user_id, subject_id=subject_id).first()
+    if existing:
+        # لو موجودة، اعرض الشهادة مباشرة
+        return render_template(
+            "certificate_generated.html",
+            user_name=existing.student_name,
+            subject=subject,
+            issue_date=existing.date_issued.strftime("%d/%m/%Y"),
+            certificate_id=existing.certificate_id,
+            qr_code_base64=existing.qr_code_base64
+        )
+
+    # POST: الطالب كتب اسمه لأول مرة
     if request.method == "POST":
         name_on_certificate = request.form.get("name")
         return redirect(url_for("generate_certificate", subject_id=subject.id, name=name_on_certificate))
-    
+
+    # GET: عرض نموذج إدخال الاسم لأول مرة
     return render_template("certificate.html", subject=subject)
-@app.route("/generate_certificate/<int:subject_id>")
+
+@app.route("/generate_certificate/<int:subject_id>", methods=["GET", "POST"])
 @login_required
 def generate_certificate(subject_id):
     subject = Subject.query.get_or_404(subject_id)
-    user_name = request.args.get("name")  # الاسم اللي كتبه المستخدم
+    user_id = session['user_id']  # نجيب ID المستخدم المسجل دخول
 
-    issue_date = date.today().strftime("%d/%m/%Y")
-    certificate_id = ''.join(random.choices(string.ascii_uppercase + string.digits, k=8))
+    # 1. تحقق لو المستخدم حصل على شهادة للمادة دي قبل كده
+    existing = Certificate.query.filter_by(user_id=user_id, subject_id=subject_id).first()
+    if existing:
+        # لو موجودة، نعرضها بدل إنشاء واحدة جديدة
+        return render_template(
+            "certificate_generated.html",
+            user_name=existing.student_name,
+            subject=subject,
+            issue_date=existing.date_issued.strftime("%d/%m/%Y"),
+            certificate_id=existing.certificate_id,
+            qr_code_base64=existing.qr_code_base64  # لو خزنت QR مسبقًا
+        )
 
-    # QR code
-    verify_url = url_for('verify_certificate', certificate_id=certificate_id, _external=True)
-    qr = qrcode.make(verify_url)
-    buffer = BytesIO()
-    qr.save(buffer, format="PNG")
-    qr_base64 = base64.b64encode(buffer.getvalue()).decode()
+    # 2. لو مش موجودة، نعمل إنشاء شهادة جديدة
+    if request.method == "POST":
+        user_name = request.form['name'].strip()
 
-    return render_template(
-        "certificate_generated.html",
-        user_name=user_name,
-        subject=subject,
-        issue_date=issue_date,
-        certificate_id=certificate_id,
-        qr_code_base64=qr_base64
-    )
+        certificate_id = ''.join(random.choices(string.ascii_uppercase + string.digits, k=8))
+        verify_url = url_for('verify_certificate', certificate_id=certificate_id, _external=True)
+        qr = qrcode.make(verify_url)
+        buffer = BytesIO()
+        qr.save(buffer, format="PNG")
+        qr_base64 = base64.b64encode(buffer.getvalue()).decode()
 
+        # 3. خزّن الشهادة في قاعدة البيانات
+        new_cert = Certificate(
+            user_id=user_id,
+            subject_id=subject_id,
+            student_name=user_name,
+            certificate_id=certificate_id,
+            qr_code_base64=qr_base64
+        )
+        db.session.add(new_cert)
+        db.session.commit()
 
+        return render_template(
+            "certificate_generated.html",
+            user_name=user_name,
+            subject=subject,
+            issue_date=date.today().strftime("%d/%m/%Y"),
+            certificate_id=certificate_id,
+            qr_code_base64=qr_base64
+        )
 
-
-
-with app.app_context():
-    db.create_all()
-
-    if not Subject.query.filter_by(name="البرمجة").first():
-        db.session.add(Subject(name="البرمجة"))
-
-    if not Subject.query.filter_by(name="منصة Qureo").first():
-        db.session.add(Subject(name="منصة Qureo"))
-
-    db.session.commit()
-    print("Database & subjects ready!")
-
-if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 5000))
-    app.run(host="0.0.0.0", port=port)
-
+    # GET request: عرض النموذج لإدخال الاسم
+    return render_template("certificate.html", subject=subject)
