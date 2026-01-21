@@ -357,3 +357,5 @@ def generate_certificate(subject_id):
 
     # GET request: عرض النموذج لإدخال الاسم
     return render_template("certificate.html", subject=subject)
+if __name__ == "__main__":
+    app.run(debug=True)

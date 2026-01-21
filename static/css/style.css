@@ -1122,3 +1122,159 @@ header img {
     font-size: 34px;
     font-size: 34px;
 }
+/* ======= إضافات للهاتف ======= */
+@media screen and (max-width: 480px) {
+
+    /* Header */
+    .header-content {
+        flex-direction: column;
+        align-items: center;
+        padding: 10px;
+        text-align: center;
+    }
+
+    .header-left h1 {
+        font-size: 24px; /* تصغير عنوان ByteHop */
+    }
+
+    .header-links {
+        gap: 10px;
+        margin-top: 8px;
+    }
+
+    .header-links a {
+        font-size: 14px;
+    }
+
+    /* Hero */
+    .hero {
+        padding: 30px 15px;
+    }
+
+    .hero h2 {
+        font-size: 28px;
+    }
+
+    .hero p {
+        font-size: 16px;
+        max-width: 90%;
+    }
+
+    .btn-hero {
+        font-size: 16px;
+        padding: 10px 20px;
+    }
+
+    /* Modules / الدروس */
+    .module {
+        padding: 15px;
+        margin-bottom: 20px;
+    }
+
+    .module h3 {
+        font-size: 18px;
+    }
+
+    .module ul li a {
+        font-size: 14px;
+        padding: 8px 10px;
+    }
+
+    /* Cards / الكروت */
+    .card, .lesson-card {
+        width: 90%;
+        padding: 15px;
+    }
+
+    .card h3, .lesson-card h4 {
+        font-size: 18px;
+    }
+
+    .progress-text {
+        font-size: 14px;
+    }
+
+    .certificate-btn, .review-btn, .complete-btn {
+        font-size: 14px;
+        padding: 8px 15px;
+    }
+
+    /* About page */
+    .about-page {
+        padding: 30px 10px;
+    }
+
+    .about-card {
+        padding: 20px 15px;
+    }
+
+    .about-header img {
+        width: 85px;
+        height: 122px;
+    }
+
+    .about-header h2 {
+        font-size: 22px;
+    }
+
+    .about-text p {
+        font-size: 14px;
+    }
+
+    .about-support input, 
+    .about-support textarea {
+        font-size: 14px;
+        padding: 10px;
+    }
+
+    .about-support button {
+        font-size: 14px;
+        padding: 10px;
+    }
+
+    /* Certificates */
+    .certificate {
+        width: 95%;
+        height: auto;
+        padding: 30px 20px;
+    }
+
+    .certificate-inner {
+        width: 95%;
+    }
+
+    .certificate-title {
+        font-size: 36px;
+    }
+
+    .platform {
+        font-size: 28px;
+    }
+
+    .name {
+        font-size: 24px;
+    }
+
+    .date, .cert-id {
+        font-size: 14px;
+    }
+
+    .qr-code {
+        width: 80px;
+        height: 80px;
+        left: 20px;
+        bottom: 30px;
+    }
+
+    .signature-name {
+        font-size: 18px;
+        bottom: 140px;
+        left: 40px;
+    }
+
+    .signature-label {
+        font-size: 12px;
+        bottom: 140px;
+        left: 100px;
+    }
+}
