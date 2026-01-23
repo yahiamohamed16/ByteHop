@@ -24,7 +24,11 @@
     <p>لا يوجد فيديو لهذا الدرس بعد.</p>
     {% endif %}
 
-
+    {% if lesson.quiz_url %}
+        <div style="text-align:center; margin-top:20px;">
+            <a href="{{ lesson.quiz_url }}" target="_blank" class="quiz-btn">الاختبار على الدرس</a>
+        </div>
+    {% endif %}
     <!-- زر "أتممت الدرس" -->
     <form method="POST" action="{{ url_for('complete_lesson', lesson_id=lesson.id) }}">
         <button type="submit" class="complete-btn">أتممت الدرس</button>

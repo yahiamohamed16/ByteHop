@@ -43,6 +43,7 @@ class Lesson(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(200), nullable=False)
     description = db.Column(db.Text, nullable=False)
+    quiz_url = db.Column(db.String(500), nullable=True) 
     video_url = db.Column(db.String(300))
     subject_id = db.Column(db.Integer, db.ForeignKey('subject.id'))
 class Progress(db.Model):    
@@ -195,7 +196,8 @@ def lesson(lesson_id):
     lesson_dict = {
         "id": lesson_data.id,
         "title": lesson_data.title,
-        "video_url": get_youtube_embed(lesson_data.video_url)  # تم التحويل
+        "video_url": get_youtube_embed(lesson_data.video_url),  # تم التحويل
+        "quiz_url": lesson_data.quiz_url 
     }
     return render_template("lesson.html", lesson=lesson_dict)
 

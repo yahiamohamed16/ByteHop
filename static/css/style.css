@@ -1278,3 +1278,22 @@ header img {
         left: 100px;
     }
 }
+.quiz-container {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.quiz-btn {
+    display: inline-block;
+    padding: 20px 30px;
+    background-color: #007bff; /* لون أزرق */
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+    transition: background-color 0.3s;
+}
+
+.quiz-btn:hover {
+    background-color: #0056b3;
+}
